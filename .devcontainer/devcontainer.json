@@ -1,1 +1,19 @@
+{
+  "name": "CLOUD Reto 4 - AWS Terraform",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "HashiCorp.terraform"
+      ]
+    }
+  },
+
+  "postCreateCommand": "aws --version && terraform version"
+}
