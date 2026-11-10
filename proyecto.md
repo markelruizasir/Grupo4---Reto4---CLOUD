@@ -59,8 +59,6 @@ capturas/fase0/codespace_funcionando.png
 - Resultado: las herramientas están instaladas y disponibles.
 - Autores: grupo 4.
 
-[Insertar aquí la captura de la terminal de Codespaces].
-
 ## 3. Organización del repositorio
 
 Se ha creado una estructura de directorios para separar los distintos componentes del proyecto.

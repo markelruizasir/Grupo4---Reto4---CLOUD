@@ -1,1 +1,53 @@
+# ==================================
+# TERRAFORM
+# ==================================
 
+# Directorios de trabajo
+.terraform/
+
+# Archivos de estado
+*.tfstate
+*.tfstate.*
+
+# Archivos de variables
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Archivos de errores
+crash.log
+crash.*.log
+
+# Configuraciones locales de Terraform
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ==================================
+# CREDENCIALES Y CLAVES PRIVADAS
+# ==================================
+
+# Credenciales de AWS
+**/.aws/
+
+# Claves SSH privadas
+**/.ssh/
+id_rsa
+id_ed25519
+id_ecdsa
+*.pem
+*.key
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# ==================================
+# SISTEMA Y EDITORES
+# ==================================
+
+.DS_Store
+Thumbs.db
