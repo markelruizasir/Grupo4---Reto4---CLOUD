@@ -1,4 +1,13 @@
 
+# LECTURA AUTOMATICA DE CLAVES PUBLICAS
+
+locals {
+  ssh_public_keys = [
+    for key_file in fileset("${path.module}/keys", "*.pub") :
+    trimspace(file("${path.module}/keys/${key_file}"))
+  ]
+}
+
 # MANAGER DEL CLUSTER
 
 resource "aws_instance" "manager" {
@@ -8,6 +17,12 @@ resource "aws_instance" "manager" {
 
   # Clave de reserva de AWS Learner Lab
   key_name = "vockey"
+
+  # Script de inicializacion del manager
+  user_data = templatefile("${path.module}/user_data.sh", {
+    hostname        = "manager-g${var.numero_grupo}"
+    ssh_public_keys = join("\n", local.ssh_public_keys)
+  })
 
   # Asignar IP publica
   associate_public_ip_address = true
@@ -37,6 +52,7 @@ resource "aws_instance" "manager" {
 
 resource "aws_instance" "workers" {
 
+  # Crear tres workers sin duplicar recursos
   count = 3
 
   ami           = var.ami_id
@@ -44,6 +60,12 @@ resource "aws_instance" "workers" {
 
   # Clave de reserva de AWS Learner Lab
   key_name = "vockey"
+
+  # Script de inicializacion de cada worker
+  user_data = templatefile("${path.module}/user_data.sh", {
+    hostname        = "worker${count.index + 1}-g${var.numero_grupo}"
+    ssh_public_keys = join("\n", local.ssh_public_keys)
+  })
 
   # Asignar IP publica
   associate_public_ip_address = true
@@ -68,3 +90,4 @@ resource "aws_instance" "workers" {
     Project = "CLOUD-Reto4"
   }
 }
+
