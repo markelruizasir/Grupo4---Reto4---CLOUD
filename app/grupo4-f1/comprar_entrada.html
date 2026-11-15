@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/entrada.css">
+    <title>Compra de Entradas - F1 Bilbao</title>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img id="logo" src="images/logo.png" alt="Logo F1 Bilbao">
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="#">La Carrera</a>
+                    <ul>
+                        <li><a href="#">Circuito</a></li>
+                        <li><a href="#">Escuderías</a></li>
+                        <li><a href="#">Horarios</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Bilbao</a>
+                    <ul>
+                        <li><a href="#">Visítanos</a></li>
+                        <li><a href="#">Gastronomía</a></li>
+                        <li><a href="#">Alojamiento</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Entradas</a>
+                    <ul>
+                        <li><a href="comprar_entrada.html">Solo Carrera</a></li>
+                        <li><a href="acceso.html">Acceso</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="sorteo.html">Sorteo Tres Primeros Pilotos</a>
+                </li>
+
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <h2>Formulario de Compra de Entrada</h2>
+
+        <form name="form1"
+              id="formulario"
+              action="procesar_compra.php"
+              method="post"
+              novalidate>
+
+            <div class="fila-formulario">
+
+                <div class="campo">
+                    <label for="dni">DNI:</label>
+                    <input type="text"
+                           id="dni"
+                           name="dni"
+                           maxlength="9">
+                    <span class="error" id="error-dni"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text"
+                           id="nombre"
+                           name="nombre">
+                    <span class="error" id="error-nombre"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text"
+                           id="apellidos"
+                           name="apellidos">
+                    <span class="error" id="error-apellidos"></span>
+                </div>
+
+            </div>
+
+            <div class="fila-formulario">
+
+                <div class="campo">
+                    <label for="email">Email:</label>
+                    <input type="email"
+                           id="email"
+                           name="email">
+                    <span class="error" id="error-email"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="tipo-entrada">Tipo de Entrada:</label>
+                    <select id="tipo-entrada" name="tipo-entrada">
+                        <option value="adulto">Adulto</option>
+                        <option value="infantil">Infantil</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="zona">Zona:</label>
+                    <select id="zona" name="zona">
+                        <option value="zona1">Zona 1</option>
+                        <option value="zona2">Zona 2</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="fila-formulario">
+
+                <div class="campo">
+                    <label for="edad">Edad:</label>
+                    <input type="number"
+                           id="edad"
+                           name="edad"
+                           min="1">
+                    <span class="error" id="error-edad"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="precio">Precio:</label>
+                    <input type="text"
+                           id="precio"
+                           name="precio"
+                           disabled>
+                    <span class="error" id="error-precio"></span>
+                </div>
+
+                <div class="campo campo-boton">
+                    <button type="button" id="calcular-precio">
+                        Calcular Precio
+                    </button>
+                </div>
+
+            </div>
+
+            <h3>Condiciones de Compra</h3>
+
+            <div class="condiciones-texto">
+
+                <h4>1. Validez de las entradas</h4>
+                <p>
+                    Las entradas adquiridas serán válidas únicamente para
+                    el Gran Premio de Euskadi de Fórmula 1 de 2026,
+                    en la fecha y zona seleccionadas durante la compra.
+                    Cada entrada permitirá el acceso a una sola persona.
+                </p>
+
+                <h4>2. Datos del comprador</h4>
+                <p>
+                    El comprador deberá proporcionar información personal
+                    veraz y completa. La organización no se responsabilizará
+                    de los problemas derivados de datos incorrectos
+                    introducidos durante el proceso de compra.
+                </p>
+
+                <h4>3. Acceso al recinto</h4>
+                <p>
+                    Para acceder al evento será obligatorio presentar
+                    una entrada válida. La organización podrá solicitar
+                    un documento de identidad para comprobar los datos
+                    del titular y verificar el tipo de entrada adquirido.
+                </p>
+
+                <h4>4. Entradas infantiles</h4>
+                <p>
+                    Las entradas infantiles están destinadas exclusivamente
+                    a menores de 18 años. Los menores deberán cumplir
+                    las normas de acceso y seguridad establecidas
+                    por la organización del evento.
+                </p>
+
+                <h4>5. Cancelaciones y devoluciones</h4>
+                <p>
+                    Las solicitudes de cancelación o devolución estarán
+                    sujetas a las condiciones aplicables y a la normativa
+                    vigente. En caso de cancelación del evento,
+                    la organización informará sobre el procedimiento
+                    correspondiente.
+                </p>
+
+                <h4>6. Seguridad y comportamiento</h4>
+                <p>
+                    Los asistentes deberán respetar las normas de seguridad,
+                    las indicaciones del personal y el resto de los
+                    espectadores. La organización podrá denegar el acceso
+                    o solicitar la salida del recinto ante comportamientos
+                    que comprometan la seguridad.
+                </p>
+
+                <h4>7. Protección de datos</h4>
+                <p>
+                    Los datos personales facilitados durante la compra
+                    se utilizarán para gestionar la solicitud y las
+                    comunicaciones relacionadas con el evento,
+                    de acuerdo con la normativa de protección de datos
+                    aplicable.
+                </p>
+
+                <h4>8. Aceptación de las condiciones</h4>
+                <p>
+                    Al marcar la casilla de aceptación y continuar
+                    con la compra, el usuario declara haber leído
+                    y aceptado las presentes condiciones.
+                </p>
+
+            </div>
+
+            <div class="aceptacion">
+                <input type="checkbox"
+                       id="aceptar-condiciones"
+                       name="aceptar-condiciones">
+
+                <label for="aceptar-condiciones">
+                    He leído y acepto las condiciones de compra.
+                </label>
+            </div>
+
+            <span class="error" id="error-condiciones"></span>
+
+            <button type="submit" id="comprar" disabled>
+                Comprar Entrada
+            </button>
+
+        </form>
+
+        <p class="info-compra">
+            Al hacer clic en <strong>"Comprar Entrada"</strong>,
+            se procesará tu solicitud.
+        </p>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <p>&copy; 2026 F1 Bilbao. Todos los derechos reservados.</p>
+                <p><small>Marca registrada de F1 y Bilbao.</small></p>
+            </div>
+
+            <nav class="footer-nav">
+                <ul>
+                    <li>
+                        <a href="https://account.formula1.com/#/en/cookie-policy/"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Cookies
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://account.formula1.com/#/en/privacy-policy"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Privacidad
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="social-icons">
+
+                <a href="https://www.facebook.com/Formula1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/facebook.png" alt="Facebook">
+                </a>
+
+                <a href="https://x.com/F1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/twitter.png" alt="Twitter">
+                </a>
+
+                <a href="https://www.instagram.com/f1/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/insta.png" alt="Instagram">
+                </a>
+
+            </div>
+
+        </div>
+    </footer>
+
+    <script src="entrada.js"></script>
+
+</body>
+</html>

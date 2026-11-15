@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/sorteo.css">
+    <title>Sorteo Tres Primeros Pilotos - F1 Bilbao</title>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img id="logo" src="images/logo.png" alt="Logo F1 Bilbao">
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="#">La Carrera</a>
+                    <ul>
+                        <li><a href="#">Circuito</a></li>
+                        <li><a href="#">Escuderías</a></li>
+                        <li><a href="#">Horarios</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Bilbao</a>
+                    <ul>
+                        <li><a href="#">Visítanos</a></li>
+                        <li><a href="#">Gastronomía</a></li>
+                        <li><a href="#">Alojamiento</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Entradas</a>
+                    <ul>
+                        <li><a href="comprar_entrada.html">Solo Carrera</a></li>
+                        <li><a href="acceso.html">Acceso</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="sorteo.html">Sorteo Tres Primeros Pilotos</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="sorteo-container">
+
+            <h1>Sorteo: Tres Primeros Pilotos de la Carrera</h1>
+
+            <p>
+                Elige los tres pilotos que crees que terminarán en el podio
+                del Gran Premio de Euskadi de Fórmula 1 de 2026.
+                Realiza el sorteo y descubre si has acertado sus posiciones.
+            </p>
+
+            <form name="form" id="formulario" novalidate>
+
+                <div class="fila-pilotos">
+
+                    <div class="campo">
+                        <label for="piloto1">1.er Piloto:</label>
+
+                        <select id="piloto1" name="piloto1">
+                            <option value="">Selecciona un piloto</option>
+                            <option value="Fernando Alonso">Fernando Alonso</option>
+                            <option value="Lewis Hamilton">Lewis Hamilton</option>
+                            <option value="Max Verstappen">Max Verstappen</option>
+                            <option value="George Russell">George Russell</option>
+                            <option value="Charles Leclerc">Charles Leclerc</option>
+                            <option value="Carlos Sainz">Carlos Sainz</option>
+                            <option value="Lando Norris">Lando Norris</option>
+                            <option value="Oscar Piastri">Oscar Piastri</option>
+                            <option value="Yuki Tsunoda">Yuki Tsunoda</option>
+                            <option value="Esteban Ocon">Esteban Ocon</option>
+                        </select>
+
+                        <span class="error" id="error-piloto1"></span>
+                    </div>
+
+                    <div class="campo">
+                        <label for="piloto2">2.º Piloto:</label>
+
+                        <select id="piloto2" name="piloto2">
+                            <option value="">Selecciona un piloto</option>
+                            <option value="Fernando Alonso">Fernando Alonso</option>
+                            <option value="Lewis Hamilton">Lewis Hamilton</option>
+                            <option value="Max Verstappen">Max Verstappen</option>
+                            <option value="George Russell">George Russell</option>
+                            <option value="Charles Leclerc">Charles Leclerc</option>
+                            <option value="Carlos Sainz">Carlos Sainz</option>
+                            <option value="Lando Norris">Lando Norris</option>
+                            <option value="Oscar Piastri">Oscar Piastri</option>
+                            <option value="Yuki Tsunoda">Yuki Tsunoda</option>
+                            <option value="Esteban Ocon">Esteban Ocon</option>
+                        </select>
+
+                        <span class="error" id="error-piloto2"></span>
+                    </div>
+
+                    <div class="campo">
+                        <label for="piloto3">3.er Piloto:</label>
+
+                        <select id="piloto3" name="piloto3">
+                            <option value="">Selecciona un piloto</option>
+                            <option value="Fernando Alonso">Fernando Alonso</option>
+                            <option value="Lewis Hamilton">Lewis Hamilton</option>
+                            <option value="Max Verstappen">Max Verstappen</option>
+                            <option value="George Russell">George Russell</option>
+                            <option value="Charles Leclerc">Charles Leclerc</option>
+                            <option value="Carlos Sainz">Carlos Sainz</option>
+                            <option value="Lando Norris">Lando Norris</option>
+                            <option value="Oscar Piastri">Oscar Piastri</option>
+                            <option value="Yuki Tsunoda">Yuki Tsunoda</option>
+                            <option value="Esteban Ocon">Esteban Ocon</option>
+                        </select>
+
+                        <span class="error" id="error-piloto3"></span>
+                    </div>
+
+                </div>
+
+                <button type="submit" id="boton-sorteo">
+                    Realizar Sorteo
+                </button>
+
+            </form>
+
+            <div id="resultado">
+
+                <div class="piloto-resultado">
+                    <h2 class="posicion">1.er Puesto</h2>
+                    <img src="" id="imagen" alt="Piloto del primer puesto">
+                    <h3 id="titulo"></h3>
+                    <h3 id="premio"></h3>
+                </div>
+
+                <div class="piloto-resultado">
+                    <h2 class="posicion">2.º Puesto</h2>
+                    <img src="" id="imagen2" alt="Piloto del segundo puesto">
+                    <h3 id="titulo2"></h3>
+                    <h3 id="premio2"></h3>
+                </div>
+
+                <div class="piloto-resultado">
+                    <h2 class="posicion">3.er Puesto</h2>
+                    <img src="" id="imagen3" alt="Piloto del tercer puesto">
+                    <h3 id="titulo3"></h3>
+                    <h3 id="premio3"></h3>
+                </div>
+
+            </div>
+
+            <h4 id="ultimo" aria-live="polite"></h4>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <p>&copy; 2026 F1 Bilbao. Todos los derechos reservados.</p>
+                <p><small>Proyecto F1 Bilbao.</small></p>
+            </div>
+
+            <nav class="footer-nav">
+                <ul>
+                    <li>
+                        <a href="https://account.formula1.com/#/en/cookie-policy/"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Cookies
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://account.formula1.com/#/en/privacy-policy"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Privacidad
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="social-icons">
+
+                <a href="https://www.facebook.com/Formula1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/facebook.png" alt="Facebook">
+                </a>
+
+                <a href="https://x.com/F1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/twitter.png" alt="Twitter">
+                </a>
+
+                <a href="https://www.instagram.com/f1/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/insta.png" alt="Instagram">
+                </a>
+
+            </div>
+
+        </div>
+    </footer>
+
+    <script src="sorteo.js"></script>
+
+</body>
+</html>
+

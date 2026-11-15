@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/acceso.css">
+    <title>Acceso - F1 Bilbao</title>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img id="logo" src="images/logo.png" alt="Logo F1 Bilbao">
+            </a>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="#">La Carrera</a>
+                    <ul>
+                        <li><a href="#">Circuito</a></li>
+                        <li><a href="#">Escuderías</a></li>
+                        <li><a href="#">Horarios</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Bilbao</a>
+                    <ul>
+                        <li><a href="#">Visítanos</a></li>
+                        <li><a href="#">Gastronomía</a></li>
+                        <li><a href="#">Alojamiento</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">Entradas</a>
+                    <ul>
+                        <li><a href="comprar_entrada.html">Solo Carrera</a></li>
+                        <li><a href="acceso.html">Acceso</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="sorteo.html">Sorteo Tres Primeros Pilotos</a>
+                </li>
+
+                <li>
+                    <a href="contacto.html">Contacto</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <h2>Acceso a tus Entradas</h2>
+
+        <form name="form2" id="formulario" novalidate>
+
+            <h3>Iniciar Sesión</h3>
+
+            <p class="descripcion">
+                Introduce tus datos para consultar tus entradas
+                del Gran Premio de Euskadi de Fórmula 1.
+            </p>
+
+            <div class="campo">
+                <label for="usuario">Usuario:</label>
+
+                <input type="text"
+                       id="usuario"
+                       name="usuario"
+                       placeholder="Introduce tu usuario"
+                       autocomplete="username"
+                       required>
+
+                <span class="error" id="error-usuario"></span>
+            </div>
+
+            <div class="campo">
+                <label for="contrasena">Contraseña:</label>
+
+                <div id="inputimagen">
+                    <input type="password"
+                           id="contrasena"
+                           name="contrasena"
+                           placeholder="Introduce tu contraseña"
+                           autocomplete="current-password"
+                           required>
+
+                    <button type="button"
+                            id="mostrar-contrasena"
+                            aria-label="Mostrar contraseña"
+                            aria-pressed="false">
+
+                        <img id="imagen"
+                             src="images/ojo/vercontra.jpg"
+                             alt="Mostrar contraseña">
+                    </button>
+                </div>
+
+                <span class="error" id="error-contrasena"></span>
+            </div>
+
+            <button type="submit" id="consultar">
+                Consultar Entradas
+            </button>
+
+        </form>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <p>&copy; 2026 F1 Bilbao. Todos los derechos reservados.</p>
+                <p><small>Proyecto F1 Bilbao.</small></p>
+            </div>
+
+            <nav class="footer-nav">
+                <ul>
+                    <li>
+                        <a href="https://account.formula1.com/#/en/cookie-policy/"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Cookies
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://account.formula1.com/#/en/privacy-policy"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Política de Privacidad
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="social-icons">
+
+                <a href="https://www.facebook.com/Formula1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/facebook.png" alt="Facebook">
+                </a>
+
+                <a href="https://x.com/F1"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/twitter.png" alt="Twitter">
+                </a>
+
+                <a href="https://www.instagram.com/f1/"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <img src="images/insta.png" alt="Instagram">
+                </a>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src="acceso.js"></script>
+
+</body>
+</html>
