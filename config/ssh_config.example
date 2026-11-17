@@ -1,0 +1,29 @@
+# CLOUD Reto 4 - Grupo 4
+# Sustituir la IP pública por la IP actual del manager.
+
+Host manager-g4
+    HostName <IP_PUBLICA_MANAGER>
+    User ubuntu
+    IdentityFile ~/.ssh/cloud_reto4_ed25519
+    IdentitiesOnly yes
+
+Host worker1-g4
+    HostName 172.31.22.73
+    User ubuntu
+    IdentityFile ~/.ssh/cloud_reto4_ed25519
+    IdentitiesOnly yes
+    ProxyJump manager-g4
+
+Host worker2-g4
+    HostName 172.31.27.190
+    User ubuntu
+    IdentityFile ~/.ssh/cloud_reto4_ed25519
+    IdentitiesOnly yes
+    ProxyJump manager-g4
+
+Host worker3-g4
+    HostName 172.31.21.56
+    User ubuntu
+    IdentityFile ~/.ssh/cloud_reto4_ed25519
+    IdentitiesOnly yes
+    ProxyJump manager-g4
