@@ -2,86 +2,120 @@
 
 ## 1. Descripción del proyecto
 
-Proyecto del grupo 4 del Reto 4 de la asignatura CLOUD de 2.º ASIR.
+Proyecto del grupo 4 de 2.º ASIR para la asignatura CLOUD.
 
-El objetivo es desplegar en AWS una aplicación web desarrollada para un evento de Fórmula 1, utilizando Terraform para aprovisionar la infraestructura y Docker Swarm para gestionar un clúster de contenedores.
+El objetivo es desplegar una aplicación web para un evento de Fórmula 1 en una infraestructura AWS, utilizando Terraform para aprovisionar los servidores y Docker Swarm para gestionar los contenedores.
 
-Se busca conseguir un sistema con balanceo de carga, escalabilidad, autorreparación y alta disponibilidad.
+El proyecto demuestra balanceo de carga, escalabilidad, autorreparación y alta disponibilidad.
 
 ## 2. Arquitectura
 
-La infraestructura estará formada por cuatro instancias EC2 en AWS:
+La infraestructura utiliza cuatro instancias EC2 en AWS, región `us-east-1`:
 
-- **1 Manager:** nodo encargado de gestionar el clúster Docker Swarm.
-- **3 Workers:** nodos encargados de ejecutar las réplicas de la aplicación.
+- **manager-g4:** manager principal del clúster.
+- **worker1-g4:** worker.
+- **worker2-g4:** worker.
+- **worker3-g4:** worker.
 
-La comunicación interna del clúster utilizará las direcciones IP privadas de las instancias.
+La configuración final consta de un manager y tres workers. La comunicación interna de Docker Swarm utiliza las IP privadas de las instancias.
 
-**Región AWS:** `us-east-1` (Learner Lab).
+La red overlay de la aplicación es `red-app-g4`. La red ingress personalizada utiliza MTU 1450.
 
 ## 3. Tecnologías utilizadas
 
-- Git y GitHub: control de versiones y trabajo colaborativo.
-- GitHub Codespaces: entorno de desarrollo principal.
-- AWS CLI: administración de los servicios AWS.
-- Terraform: aprovisionamiento de infraestructura como código.
-- Amazon EC2: servidores de la infraestructura.
-- SSH: administración remota de los nodos.
-- Docker: contenedores e imágenes de la aplicación.
-- Docker Swarm: orquestación y gestión del clúster.
+- Git y GitHub: control de versiones y colaboración.
+- GitHub Codespaces: entorno de desarrollo y administración.
+- AWS CLI: gestión de los recursos de AWS.
+- Terraform: infraestructura como código.
+- Amazon EC2: máquinas virtuales.
+- SSH: administración remota segura.
+- Docker Engine: ejecución de contenedores.
+- Docker Swarm: orquestación y alta disponibilidad.
+- Nginx: servidor web de la aplicación.
 
 ## 4. Estructura del repositorio
 
-| Directorio / archivo | Descripción |
+| Directorio / archivo | Función |
 |---|---|
 | `.devcontainer/` | Configuración de GitHub Codespaces. |
-| `terraform/` | Código de infraestructura AWS. |
-| `app/` | Aplicación web, Dockerfile y versiones. |
-| `config/` | Configuraciones SSH. |
-| `scripts/` | Scripts de automatización y comprobación. |
-| `diagramas/` | Diagramas de arquitectura. |
+| `terraform/` | Infraestructura AWS, variables, salidas y arranque automático. |
+| `app/` | Dockerfile, configuración Nginx y web original. |
+| `config/` | Configuración y acceso SSH. |
+| `scripts/` | Scripts de comprobación y monitorización. |
+| `diagramas/` | Arquitectura del proyecto. |
 | `practica-individual/` | Documentación de la práctica individual. |
-| `README.md` | Presentación del proyecto. |
+| `capturas/` | Evidencias de las fases del proyecto. |
+| `README.md` | Presentación e instrucciones generales. |
 | `proyecto.md` | Informe técnico de las fases 0 a 5. |
 | `gestion.md` | Reparto de tareas y reflexión del equipo. |
 
-## 5. Preparación del entorno
+## 5. Entorno de trabajo
 
-El entorno principal de desarrollo se ejecuta mediante GitHub Codespaces.
+El entorno principal se ejecuta mediante GitHub Codespaces y utiliza un Dev Container configurado con AWS CLI y Terraform.
 
-El Dev Container incluye:
+Las credenciales de AWS se introducen durante la sesión y no se guardan en el repositorio.
 
-- AWS CLI.
-- Terraform.
-- Extensión de Terraform para Visual Studio Code.
+## 6. Infraestructura con Terraform
 
-Los colaboradores utilizan Git desde sus propios entornos Linux, WSL o Git Bash.
+La infraestructura se define mediante código en el directorio `terraform/`.
 
-## 6. Despliegue
+Comandos principales:
 
-**Estado: pendiente de completar.**
+- `terraform init`
+- `terraform fmt -check`
+- `terraform validate`
+- `terraform plan`
 
-En este apartado se incorporarán las instrucciones necesarias para:
+La creación y modificación de recursos se realiza con `terraform apply`, después de revisar el plan generado.
 
-1. Configurar el acceso a AWS.
-2. Aprovisionar la infraestructura mediante Terraform.
-3. Acceder a los servidores mediante SSH.
-4. Configurar el clúster Docker Swarm.
-5. Desplegar la aplicación web.
+Las variables locales y los archivos de estado de Terraform no se versionan.
 
-Las instrucciones definitivas se añadirán conforme se completen las distintas fases del proyecto.
+## 7. Acceso SSH
 
-## 7. Docker Hub
+Los cuatro servidores se administran mediante claves SSH propias.
 
-**Estado: pendiente de completar.**
+Se utiliza un archivo de configuración SSH para acceder mediante nombres cortos. Los workers se alcanzan por sus IP privadas utilizando el manager como salto.
 
-- Imagen versión 1.0: pendiente.
-- Imagen versión 2.0: pendiente.
+## 8. Despliegue de la aplicación
 
-Se incorporarán los enlaces a las imágenes publicadas en Docker Hub.
+La imagen propia de la aplicación está publicada en Docker Hub:
 
-## 8. Documentación
+**Repositorio:** https://hub.docker.com/r/markelasir/grupo4-f1
 
-El proceso completo del proyecto se documentará en `proyecto.md`, incluyendo configuraciones, comandos, resultados y capturas de las pruebas realizadas.
+Versiones publicadas:
 
-El reparto de tareas y la reflexión individual y grupal se recogerán en `gestion.md`.
+- `markelasir/grupo4-f1:1.0`
+- `markelasir/grupo4-f1:2.0`
+
+El servicio Docker Swarm se denomina `grupo4-f1` y utiliza cuatro réplicas, conectadas a la red overlay de la aplicación y publicadas en el puerto 80.
+
+Para consultar su estado: `docker service ls` y `docker service ps grupo4-f1`.
+
+La aplicación se puede consultar mediante la IP pública de cualquiera de los cuatro nodos.
+
+## 9. Pruebas de orquestación
+
+Durante el proyecto se han realizado pruebas de:
+
+- Balanceo de carga.
+- Escalado de réplicas a 8, 12 y 2.
+- Autorreparación al eliminar un contenedor.
+- Alta disponibilidad ante la caída de un worker.
+- Recuperación y reincorporación de nodos.
+- Mantenimiento mediante `drain` y reactivación.
+- Actualización de la versión 1.0 a la 2.0 y rollback.
+- Alta disponibilidad de managers mediante elección de un nuevo líder.
+
+Los resultados y las evidencias se recogen en `proyecto.md` y en el directorio `capturas/`.
+
+## 10. Seguridad
+
+El repositorio excluye credenciales, claves privadas, archivos de variables sensibles y estados de Terraform mediante `.gitignore`.
+
+No deben subirse al repositorio credenciales de AWS, claves privadas SSH, archivos `.tfstate`, archivos `terraform.tfvars` ni tokens de acceso.
+
+## 11. Documentación
+
+- **`proyecto.md`:** informe técnico detallado de las fases 0 a 5.
+- **`gestion.md`:** reparto de tareas, responsables y reflexión del equipo.
+- **`capturas/`:** evidencias de las configuraciones y pruebas realizadas.
