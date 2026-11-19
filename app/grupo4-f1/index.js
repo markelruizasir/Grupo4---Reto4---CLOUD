@@ -119,3 +119,120 @@ function actualizarContador() {
 actualizarContador();
 
 setInterval(actualizarContador, 1000);
+
+// ==========================================
+// IDENTIFICACION DE LA INFRAESTRUCTURA CLOUD
+// ==========================================
+
+async function cargarInfoInfraestructura() {
+
+    const panel = document.getElementById("infraestructura");
+
+    if (!panel) {
+        return;
+    }
+
+    const estado = document.getElementById("infra-estado");
+
+    try {
+
+        // Consultar la informacion de la replica que responde
+        const respuesta = await fetch("/__container", {
+            cache: "no-store"
+        });
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo consultar la infraestructura");
+        }
+
+        const datos = await respuesta.json();
+
+        // Obtener la direccion utilizada por el navegador
+        const ipAcceso = window.location.hostname;
+
+        // Obtener el mapa de IP publicas de los cuatro nodos
+        const nodosPublicos = datos.public_nodes || {};
+
+        // Identificar a que nodo corresponde la IP de entrada
+        const nodoEntrada = Object.entries(nodosPublicos).find(
+            ([nombre, ip]) => ip === ipAcceso
+        );
+
+        let nombreEntrada = "No identificado";
+
+        if (nodoEntrada) {
+
+            const nombre = nodoEntrada[0];
+
+            nombreEntrada = nombre === "manager"
+                ? "Manager"
+                : nombre.replace("worker", "Worker ");
+
+        } else {
+
+            nombreEntrada = "Dominio o IP no registrada";
+        }
+
+        // Mostrar la informacion de acceso
+        document.getElementById("infra-acceso-ip").textContent =
+            ipAcceso;
+
+        document.getElementById("infra-acceso-nodo").textContent =
+            "Entrada al clúster: " + nombreEntrada;
+
+        // Mostrar el nodo que realmente ejecuta la replica
+        document.getElementById("infra-ejecutor-nodo").textContent =
+            datos.node_hostname || "Desconocido";
+
+        document.getElementById("infra-ejecutor-rol").textContent =
+            "Rol: " + (datos.node_role || "Desconocido");
+
+        document.getElementById("infra-ejecutor-id").textContent =
+            datos.node_id || "Desconocido";
+
+        // Mostrar informacion del contenedor
+        document.getElementById("infra-contenedor").textContent =
+            datos.container || "Desconocido";
+
+        document.getElementById("infra-version").textContent =
+            "Version: " + (datos.version || "Desconocida");
+
+        // Indicar que la consulta se ha completado
+        estado.textContent = "INFRAESTRUCTURA ACTIVA";
+        estado.style.color = "#00d084";
+        estado.style.borderColor = "#00d084";
+
+    } catch (error) {
+
+        console.error("Error consultando la infraestructura:", error);
+
+        estado.textContent = "INFORMACION NO DISPONIBLE";
+        estado.style.color = "#ff5555";
+        estado.style.borderColor = "#ff5555";
+
+        document.getElementById("infra-acceso-ip").textContent =
+            window.location.hostname;
+
+        document.getElementById("infra-ejecutor-nodo").textContent =
+            "No disponible";
+
+        document.getElementById("infra-ejecutor-rol").textContent =
+            "No disponible";
+
+        document.getElementById("infra-ejecutor-id").textContent =
+            "No disponible";
+
+        document.getElementById("infra-contenedor").textContent =
+            "No disponible";
+
+        document.getElementById("infra-version").textContent =
+            "No disponible";
+    }
+}
+
+
+// Consulta inicial
+cargarInfoInfraestructura();
+
+// Actualizar informacion cada 10 segundos
+setInterval(cargarInfoInfraestructura, 10000);

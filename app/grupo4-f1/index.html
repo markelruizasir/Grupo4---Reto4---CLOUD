@@ -47,8 +47,48 @@
         <p id="tiempo"></p>
     </div>
 
+<section id="infraestructura" class="infra-panel" aria-live="polite">
 
-    
+    <div class="infra-panel-cabecera">
+        <div>
+            <p class="infra-etiqueta">AWS · DOCKER SWARM</p>
+            <h2>Estado de la infraestructura</h2>
+            <p>Información de acceso y del servidor que atiende la petición.</p>
+        </div>
+
+        <span id="infra-estado" class="infra-estado">
+            CONSULTANDO...
+        </span>
+    </div>
+
+    <div class="infra-grid">
+
+        <div class="infra-item">
+            <span>IP pública utilizada</span>
+            <strong id="infra-acceso-ip">Detectando...</strong>
+            <small id="infra-acceso-nodo">Identificando nodo de entrada...</small>
+        </div>
+
+        <div class="infra-item">
+            <span>Nodo que atiende la petición</span>
+            <strong id="infra-ejecutor-nodo">Consultando...</strong>
+            <small id="infra-ejecutor-rol">Identificando rol...</small>
+        </div>
+
+        <div class="infra-item">
+            <span>ID del nodo Swarm</span>
+            <strong id="infra-ejecutor-id">Consultando...</strong>
+        </div>
+
+        <div class="infra-item">
+            <span>Contenedor y versión</span>
+            <strong id="infra-contenedor">Consultando...</strong>
+            <small id="infra-version">Versión desconocida</small>
+        </div>
+
+    </div>
+</section>
+
     <main>
         <section class="principal">
             <img src="images/main1.jpg" alt="Carrera" class="img-carrera">
@@ -66,9 +106,9 @@
                 POSTERIORMENTE MOTORES ELÉCTRICOS</p>
             </div>
             <img src="images/alonso.png" alt="alonso" class="img-alonso"> <img src="images/circuito.png" alt="Circuito" class="img-circuito"> <img src="images/coche.png" alt="Coche de F1" class="img-coche">
-           
+
         </section>
-        
+
         <aside class="lateral">
             <div id="cabecera">
                 <h2 align="center"  id="titulo"> Guggenheim </h2>
@@ -76,7 +116,7 @@
             <div>
                 <img src="images/carrusel/1.png" id="imagen" align="center" width="540px" height="300px"/>
             </div>
-          
+
             <div class="f1-enlaces-container">
 <div class="f1-enlaces-container">
 
@@ -108,7 +148,7 @@
     <a href="https://www.fia.com/sites/default/files/fia_2026_formula_1_technical_regulations_issue_8_-_2024-06-24.pdf" download="Reglamento_Tecnico_F1_2026_FIA.pdf">
         Descargar Reglamento Técnico F1 2026 (PDF)
     </a>
-    
+
     <p class="normativa-hash-info">
         <span style="font-weight: bold;">Hash sha256:</span>
         <span style="word-break: break-all;">11ff237a8617dba96010e7ccaa479cf4af770eb57893e621d27f86ec42385175</span>
@@ -118,7 +158,7 @@
             </div>
         </aside>
     </main>
-    
+
 <section class="f1-partners-section">
     <div class="f1-partners-header">
         <h2>NUESTROS PATROCINADORES</h2>
@@ -176,13 +216,13 @@
             <div class="social-icons">
                 <a href="https://x.com/F1?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
                 <a href="https://x.com/F1?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" target="_blank"><img src="images/twitter.png" alt="Twitter"></a>
-                <a href="https://x.com/F1?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" target="_blank"><img src="images/insta.png" alt="Instagram"></a> 
+                <a href="https://x.com/F1?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
             </div>
         </div>
     </footer>
     <script src="index.js">
-        
-        
+
+
 
 
     </script>
