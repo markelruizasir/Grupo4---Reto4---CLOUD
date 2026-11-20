@@ -1,121 +1,295 @@
 # CLOUD Reto 4 — Web en clúster Docker Swarm sobre AWS
 
-## 1. Descripción del proyecto
+Proyecto del **Grupo 4 de 2.º ASIR** para la asignatura CLOUD. El objetivo es desplegar una aplicación web relacionada con un evento de Fórmula 1 sobre una infraestructura de AWS, aprovisionada con Terraform y administrada mediante Docker Swarm.
 
-Proyecto del grupo 4 de 2.º ASIR para la asignatura CLOUD.
+La solución utiliza cuatro instancias EC2: un nodo manager y tres workers. La aplicación se ejecuta como un servicio replicado con cuatro réplicas, publicado por HTTP en el puerto 80.
 
-El objetivo es desplegar una aplicación web para un evento de Fórmula 1 en una infraestructura AWS, utilizando Terraform para aprovisionar los servidores y Docker Swarm para gestionar los contenedores.
+---
 
-El proyecto demuestra balanceo de carga, escalabilidad, autorreparación y alta disponibilidad.
+## Contenido
 
-## 2. Arquitectura
+- [Arquitectura](#arquitectura)
+- [Tecnologías](#tecnologías)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Configuración y puesta en marcha](#configuración-y-puesta-en-marcha)
+- [Despliegue de la aplicación](#despliegue-de-la-aplicación)
+- [Comprobaciones y pruebas](#comprobaciones-y-pruebas)
+- [Direcciones IP públicas dinámicas](#direcciones-ip-públicas-dinámicas)
+- [Seguridad](#seguridad)
+- [Documentación y enlaces](#documentación-y-enlaces)
 
-La infraestructura utiliza cuatro instancias EC2 en AWS, región `us-east-1`:
+## Arquitectura
 
-- **manager-g4:** manager principal del clúster.
-- **worker1-g4:** worker.
-- **worker2-g4:** worker.
-- **worker3-g4:** worker.
+```mermaid
+flowchart TB
+    U[Usuario / navegador] -->|HTTP TCP 80| RM[Routing Mesh de Docker Swarm]
+    subgraph AWS[AWS · Región us-east-1]
+      RM --> S[Servicio grupo4-f1 · VIP · 4 réplicas]
+      subgraph SW[Clúster Docker Swarm]
+        M[manager-g4\nManager / Leader]
+        W1[worker1-g4\nWorker]
+        W2[worker2-g4\nWorker]
+        W3[worker3-g4\nWorker]
+      end
+      S --> M
+      S --> W1
+      S --> W2
+      S --> W3
+      M <-->|Red privada / overlay| W1
+      M <-->|Red privada / overlay| W2
+      M <-->|Red privada / overlay| W3
+    end
+    C[GitHub Codespaces\nAWS CLI · Terraform · SSH] -->|Aprovisionamiento y administración| AWS
+    DH[Docker Hub\nmarkelasir/grupo4-f1] -->|Imágenes versionadas| S
+```
 
-La configuración final consta de un manager y tres workers. La comunicación interna de Docker Swarm utiliza las IP privadas de las instancias.
+### Nodos del clúster
 
-La red overlay de la aplicación es `red-app-g4`. La red ingress personalizada utiliza MTU 1450.
+| Nombre | Función | Tipo de instancia |
+|---|---|---|
+| `manager-g4` | Manager y líder de Swarm | `t3.medium` |
+| `worker1-g4` | Worker | `t3.small` |
+| `worker2-g4` | Worker | `t3.small` |
+| `worker3-g4` | Worker | `t3.small` |
 
-## 3. Tecnologías utilizadas
+La comunicación interna entre nodos se realiza mediante sus direcciones IP privadas. Las direcciones públicas las asigna AWS y pueden cambiar al detener y volver a iniciar las instancias.
 
-- Git y GitHub: control de versiones y colaboración.
-- GitHub Codespaces: entorno de desarrollo y administración.
-- AWS CLI: gestión de los recursos de AWS.
-- Terraform: infraestructura como código.
-- Amazon EC2: máquinas virtuales.
-- SSH: administración remota segura.
-- Docker Engine: ejecución de contenedores.
-- Docker Swarm: orquestación y alta disponibilidad.
-- Nginx: servidor web de la aplicación.
+### Servicio web
 
-## 4. Estructura del repositorio
-
-| Directorio / archivo | Función |
+| Parámetro | Configuración comprobada |
 |---|---|
-| `.devcontainer/` | Configuración de GitHub Codespaces. |
-| `terraform/` | Infraestructura AWS, variables, salidas y arranque automático. |
-| `app/` | Dockerfile, configuración Nginx y web original. |
-| `config/` | Configuración y acceso SSH. |
-| `scripts/` | Scripts de comprobación y monitorización. |
-| `diagramas/` | Arquitectura del proyecto. |
-| `practica-individual/` | Documentación de la práctica individual. |
-| `capturas/` | Evidencias de las fases del proyecto. |
-| `README.md` | Presentación e instrucciones generales. |
-| `proyecto.md` | Informe técnico de las fases 0 a 5. |
-| `gestion.md` | Reparto de tareas y reflexión del equipo. |
+| Servicio | `grupo4-f1` |
+| Imagen actualmente desplegada | `markelasir/grupo4-f1:2.1` |
+| Modo | Replicated |
+| Réplicas | 4 |
+| Red de aplicación | `red-app-g4` (overlay) |
+| Puerto publicado | TCP 80 |
+| Modo de publicación | `ingress` |
+| Endpoint del servicio | `VIP` |
+| Distribución | `spread=node.hostname` |
+| Máximo de réplicas por nodo | 1 |
 
-## 5. Entorno de trabajo
+La etiqueta `2.1` corresponde a la versión desplegada al finalizar las últimas modificaciones. Las versiones `1.0` y `2.0` también se publicaron en Docker Hub para las pruebas de versionado y rollback.
 
-El entorno principal se ejecuta mediante GitHub Codespaces y utiliza un Dev Container configurado con AWS CLI y Terraform.
+## Tecnologías
 
-Las credenciales de AWS se introducen durante la sesión y no se guardan en el repositorio.
+- **Git y GitHub:** control de versiones y colaboración.
+- **GitHub Codespaces / Dev Container:** entorno de administración.
+- **AWS CLI:** consulta y administración de recursos de AWS.
+- **Terraform:** infraestructura como código.
+- **Amazon EC2:** máquinas virtuales que alojan el clúster.
+- **SSH:** administración remota mediante claves y salto al manager.
+- **Docker Engine:** construcción y ejecución de contenedores.
+- **Docker Swarm:** gestión de nodos, servicios y réplicas.
+- **Docker Hub:** publicación y distribución de imágenes.
+- **Nginx Alpine:** servidor HTTP de la aplicación.
 
-## 6. Infraestructura con Terraform
+La imagen Docker utilizada se basa en `nginx:alpine` y sirve los archivos web incluidos en el repositorio. Aunque el árbol original de la aplicación contiene archivos PHP, el Dockerfile de este despliegue no incorpora PHP-FPM ni otro intérprete PHP; por tanto, este despliegue no debe describirse como un backend PHP funcional.
 
-La infraestructura se define mediante código en el directorio `terraform/`.
+## Estructura del repositorio
 
-Comandos principales:
+```text
+.
+├── .devcontainer/          # Configuración de GitHub Codespaces
+├── terraform/              # Proveedor, variables, EC2, Security Group,
+│                           # outputs y script user_data.sh
+├── app/
+│   ├── Dockerfile          # Construcción de la imagen propia
+│   ├── docker/             # Configuración Nginx e identificación del contenedor
+│   └── grupo4-f1/           # Archivos de la aplicación web
+├── config/                 # Ejemplo de configuración SSH
+├── scripts/                # Scripts de comprobación y monitorización
+├── diagramas/              # Diagramas de arquitectura
+├── capturas/               # Evidencias organizadas por fase
+├── practica-individual/    # Documentación de la práctica individual
+├── README.md               # Presentación e instrucciones rápidas
+├── proyecto.md             # Memoria técnica de las fases 0 a 5
+└── gestion.md              # Reparto de tareas y reflexión del equipo
+```
 
-- `terraform init`
-- `terraform fmt -check`
-- `terraform validate`
-- `terraform plan`
+## Configuración y puesta en marcha
 
-La creación y modificación de recursos se realiza con `terraform apply`, después de revisar el plan generado.
+Los siguientes pasos describen el flujo de trabajo del proyecto. Las credenciales, claves privadas, variables locales y estados de Terraform no se incluyen en GitHub.
 
-Las variables locales y los archivos de estado de Terraform no se versionan.
+### 1. Abrir el entorno de trabajo
 
-## 7. Acceso SSH
+1. Clonar el repositorio privado o abrirlo desde GitHub Codespaces.
+2. Esperar a que el Dev Container termine de preparar el entorno.
+3. Comprobar que las herramientas están disponibles:
 
-Los cuatro servidores se administran mediante claves SSH propias.
+```bash
+aws --version
+terraform version
+git --version
+```
 
-Se utiliza un archivo de configuración SSH para acceder mediante nombres cortos. Los workers se alcanzan por sus IP privadas utilizando el manager como salto.
+### 2. Configurar las credenciales de AWS
 
-## 8. Despliegue de la aplicación
+Iniciar el AWS Academy Learner Lab y cargar las credenciales temporales siguiendo las instrucciones del laboratorio. Comprobar que la identidad está disponible:
 
-La imagen propia de la aplicación está publicada en Docker Hub:
+```bash
+aws sts get-caller-identity
+```
 
-**Repositorio:** https://hub.docker.com/r/markelasir/grupo4-f1
+Las credenciales temporales caducan y deben renovarse cuando el laboratorio lo requiera. No deben copiarse en archivos versionados ni publicarse en GitHub.
 
-Versiones publicadas:
+### 3. Preparar Terraform
+
+Desde la raíz del repositorio, revisar las variables declaradas en `terraform/variables.tf` y crear localmente `terraform/terraform.tfvars` con los valores del entorno. Este archivo está excluido del control de versiones.
+
+Inicializar, formatear y validar la configuración:
+
+```bash
+terraform -chdir=terraform init
+terraform -chdir=terraform fmt -check
+terraform -chdir=terraform validate
+terraform -chdir=terraform plan
+```
+
+Revisar el plan antes de crear o modificar recursos. Cuando se vaya a desplegar la infraestructura, aplicar los cambios de forma consciente:
+
+```bash
+terraform -chdir=terraform apply
+```
+
+### 4. Configurar el acceso SSH
+
+El repositorio contiene un ejemplo de configuración en `config/ssh_config.example`. Copiarlo al archivo local `~/.ssh/config` y adaptar las direcciones `HostName` a las IP públicas actuales obtenidas de AWS. Proteger el archivo local:
+
+```bash
+chmod 600 ~/.ssh/config
+```
+
+La clave privada permanece en el equipo del usuario y no se sube al repositorio. El acceso a los workers se realiza mediante el manager como salto SSH (`ProxyJump`), utilizando sus direcciones privadas.
+
+Comprobar el acceso al manager:
+
+```bash
+ssh manager-g4
+```
+
+### 5. Administrar el clúster
+
+Una vez conectado al manager, se pueden consultar los nodos, servicios y tareas:
+
+```bash
+docker node ls
+docker service ls
+docker service ps grupo4-f1
+```
+
+La infraestructura y el servicio ya desplegados se administran desde el manager. No ejecutar `terraform destroy` salvo que se quiera eliminar deliberadamente la infraestructura y se hayan revisado antes sus consecuencias.
+
+## Despliegue de la aplicación
+
+El Dockerfile se encuentra en `app/Dockerfile`. Define Nginx Alpine como imagen base, copia los archivos de la web, añade la configuración de Nginx y el script que genera la información de identificación del contenedor.
+
+### Versiones publicadas
 
 - `markelasir/grupo4-f1:1.0`
 - `markelasir/grupo4-f1:2.0`
+- `markelasir/grupo4-f1:2.1` — versión incorporada al servicio después de añadir el panel de infraestructura.
 
-El servicio Docker Swarm se denomina `grupo4-f1` y utiliza cuatro réplicas, conectadas a la red overlay de la aplicación y publicadas en el puerto 80.
+Repositorio: [Docker Hub — markelasir/grupo4-f1](https://hub.docker.com/r/markelasir/grupo4-f1)
 
-Para consultar su estado: `docker service ls` y `docker service ps grupo4-f1`.
+En el entorno utilizado, el cliente Docker no estaba instalado en Codespaces; la construcción y publicación se ejecutaron en el manager, transfiriendo primero el contenido de `app/` por SSH. Un ejemplo del procedimiento de construcción y publicación de la versión actual es:
 
-La aplicación se puede consultar mediante la IP pública de cualquiera de los cuatro nodos.
+```bash
+tar -C app -czf - . | ssh manager-g4 '
+  set -e
+  mkdir -p ~/grupo4-f1-build
+  tar -xzf - -C ~/grupo4-f1-build
+  docker build --build-arg APP_VERSION=2.1 \
+    -t markelasir/grupo4-f1:2.1 ~/grupo4-f1-build
+  docker push markelasir/grupo4-f1:2.1
+'
+```
 
-## 9. Pruebas de orquestación
+El servicio Swarm se denomina `grupo4-f1`, utiliza cuatro réplicas y publica TCP 80 mediante el modo `ingress`. El endpoint `/__container` devuelve JSON con la versión, hostname, rol, identificador Swarm e identificador del contenedor que atiende la consulta.
 
-Durante el proyecto se han realizado pruebas de:
+Para consultar la información de una réplica:
 
-- Balanceo de carga.
-- Escalado de réplicas a 8, 12 y 2.
-- Autorreparación al eliminar un contenedor.
-- Alta disponibilidad ante la caída de un worker.
-- Recuperación y reincorporación de nodos.
-- Mantenimiento mediante `drain` y reactivación.
-- Actualización de la versión 1.0 a la 2.0 y rollback.
-- Alta disponibilidad de managers mediante elección de un nuevo líder.
+```bash
+curl http://IP_PUBLICA_ACTUAL/__container
+```
 
-Los resultados y las evidencias se recogen en `proyecto.md` y en el directorio `capturas/`.
+Sustituir `IP_PUBLICA_ACTUAL` por la dirección vigente de cualquiera de los nodos.
 
-## 10. Seguridad
+## Comprobaciones y pruebas
 
-El repositorio excluye credenciales, claves privadas, archivos de variables sensibles y estados de Terraform mediante `.gitignore`.
+Las pruebas realizadas se documentan con sus evidencias en `proyecto.md` y en `capturas/`.
 
-No deben subirse al repositorio credenciales de AWS, claves privadas SSH, archivos `.tfstate`, archivos `terraform.tfvars` ni tokens de acceso.
+| Prueba | Qué se comprueba |
+|---|---|
+| E1 — Balanceo | Distintas réplicas responden a peticiones enviadas a una misma IP pública. |
+| E2 — Escalado | El servicio se escala a 8, 12 y después 2 réplicas. |
+| E3 — Autorreparación | Tras eliminar/detener un contenedor, Swarm crea una nueva tarea para recuperar el número deseado de réplicas. |
+| E4 — Caída de worker | Se detiene una instancia worker y se comprueba que la web sigue respondiendo por la IP de entrada utilizada. |
+| E5 — Reincorporación | El worker vuelve a `Ready` y se recupera la distribución de una réplica por nodo. |
+| E6 — Drain | Se pone un nodo en mantenimiento y Swarm reubica sus tareas. Después se reactiva. |
+| E7 — Actualización y rollback | Se actualiza la aplicación de 1.0 a 2.0 y se comprueba la reversión a la versión anterior. |
+| E8 — Managers | Se prueba temporalmente la elección de un nuevo líder al detener el manager que ejercía como líder. |
 
-## 11. Documentación
+La escalabilidad se realiza de forma manual mediante el estado deseado del servicio; no se ha configurado autoescalado automático basado en tráfico.
 
-- **`proyecto.md`:** informe técnico detallado de las fases 0 a 5.
-- **`gestion.md`:** reparto de tareas, responsables y reflexión del equipo.
-- **`capturas/`:** evidencias de las configuraciones y pruebas realizadas.
+Comandos de consulta habituales:
+
+```bash
+docker service ls
+docker service ps grupo4-f1
+docker node ls
+```
+
+El script de monitorización se encuentra en `scripts/monitor-web.sh`.
+
+## Direcciones IP públicas dinámicas
+
+AWS puede asignar una nueva dirección IPv4 pública a una instancia EC2 cuando se detiene y vuelve a iniciar. Por ello, este README no fija IP públicas como valores permanentes.
+
+Para consultar las direcciones actuales de los cuatro nodos:
+
+```bash
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --filters \
+    "Name=tag:Name,Values=manager-g4,worker1-g4,worker2-g4,worker3-g4" \
+    "Name=instance-state-name,Values=running" \
+  --query "Reservations[].Instances[].[Tags[?Key=='Name']|[0].Value,PublicIpAddress]" \
+  --output table
+```
+
+Después de un reinicio de instancias, actualizar las direcciones públicas de los alias SSH locales. Si el panel de la aplicación utiliza las variables `PUBLIC_MANAGER_IP` y `PUBLIC_WORKER*_IP`, actualizar también esas variables del servicio para que la identificación del nodo de entrada siga siendo correcta.
+
+Las direcciones privadas se utilizan para la comunicación interna del clúster y para el salto SSH hacia los workers.
+
+## Seguridad
+
+El repositorio incluye reglas en `.gitignore` para evitar versionar:
+
+- Directorios `.terraform/`.
+- Archivos `*.tfstate` y copias del estado.
+- Archivos `*.tfvars` y variantes.
+- Credenciales y directorios locales de AWS.
+- Claves privadas SSH y archivos `.pem` / `.key`.
+- Archivos `.env`.
+
+Antes de hacer `git add` o publicar cambios, comprobar que no se han añadido archivos sensibles:
+
+```bash
+git status --short
+git ls-files | grep -E 'terraform\.tfstate|terraform\.tfvars|\.pem$|id_rsa|id_ed25519' || true
+```
+
+No incluir nunca contraseñas, tokens de Docker Hub, claves privadas SSH, credenciales de AWS ni estados de Terraform en commits, capturas o documentación.
+
+## Documentación y enlaces
+
+- [Memoria técnica del proyecto — `proyecto.md`](proyecto.md)
+- **Gestión del trabajo y reflexión:** `gestion.md` (documento complementario del equipo).
+- [Índice de capturas](capturas/INDICE.md)
+- [Diagrama de arquitectura](diagramas/arquitectura.mmd)
+- [Imagen propia en Docker Hub](https://hub.docker.com/r/markelasir/grupo4-f1)
+
+---
+
+**Grupo 4 · 2.º ASIR · CLOUD Reto 4**

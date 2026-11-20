@@ -1,0 +1,25 @@
+flowchart TB
+    U[Usuario / navegador]
+    CS[GitHub Codespaces<br/>AWS CLI · Terraform · SSH]
+    subgraph AWS[AWS · us-east-1]
+      subgraph SWARM[Docker Swarm · red privada]
+        M[manager-g4<br/>Manager / Leader]
+        W1[worker1-g4<br/>Worker]
+        W2[worker2-g4<br/>Worker]
+        W3[worker3-g4<br/>Worker]
+        S[Servicio grupo4-f1<br/>4 réplicas · Nginx]
+        M --- S
+        W1 --- S
+        W2 --- S
+        W3 --- S
+      end
+    end
+    U -->|HTTP TCP 80| M
+    U -->|HTTP TCP 80| W1
+    U -->|HTTP TCP 80| W2
+    U -->|HTTP TCP 80| W3
+    CS -->|Terraform / AWS CLI| AWS
+    CS -->|SSH| M
+    M -->|ProxyJump · IP privada| W1
+    M -->|ProxyJump · IP privada| W2
+    M -->|ProxyJump · IP privada| W3
